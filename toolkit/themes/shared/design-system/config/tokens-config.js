@@ -401,10 +401,7 @@ function formatVariables({ format, dictionary, outputReferences, formatting }) {
   return outputParts.join("\n");
 }
 
-// Easy way to grab variable values later for display.
-let variableLookupTable = {};
-
-function tokensTableFormat(args) {
+function buildTokensData(args) {
   let dictionary = Object.assign({}, args.dictionary);
   let resolvedTokens = dictionary.allTokens.map(token => {
     let tokenVal = resolveReferences(dictionary, token.original);
@@ -425,12 +422,24 @@ function tokensTableFormat(args) {
       .trim()
       .replaceAll(/(^module\.exports\s*=\s*|\;$)/g, "")
   );
-  let tokensTable = formatTokensTableData(parsedData);
+  return formatTokensTableData(parsedData);
+}
+
+function tokensTableFormat(args) {
+  let { tokensTable, variableLookupTable } = buildTokensData(args);
 
   return `${customFileHeader({ platform: "tokens-table" })}
   export const tokensTable = ${JSON.stringify(tokensTable)};
 
   export const variableLookupTable = ${JSON.stringify(variableLookupTable)};
+  `;
+}
+
+function tokensStylelintFormat(args) {
+  let { tokensTable } = buildTokensData(args);
+
+  return `${customFileHeader({ platform: "tokens-stylelint" })}
+  export const tokensTable = ${JSON.stringify(tokensTable)};
   `;
 }
 
@@ -461,6 +470,7 @@ function getValueWithReferences(dictionary, value) {
 }
 
 function formatTokensTableData(tokensData) {
+  let variableLookupTable = {};
   let tokensTable = {};
   Object.entries(tokensData).forEach(([key, value]) => {
     variableLookupTable[key] = value;
@@ -476,7 +486,7 @@ function formatTokensTableData(tokensData) {
       tokensTable[tableName] = [formattedToken];
     }
   });
-  return tokensTable;
+  return { tokensTable, variableLookupTable };
 }
 
 const SINGULAR_TABLE_CATEGORIES = [
@@ -528,6 +538,7 @@ module.exports = {
     "css/variables/brand": createDesktopFormat("brand"),
     "css/variables/platform": createDesktopFormat("platform"),
     "javascript/tokens-table": tokensTableFormat,
+    "javascript/tokens-stylelint": tokensStylelintFormat,
     ...figmaConfig.formats,
   },
   platforms: {
@@ -574,6 +585,10 @@ module.exports = {
         {
           destination: "dist/tokens-table.mjs",
           format: "javascript/tokens-table",
+        },
+        {
+          destination: "dist/tokens-stylelint.mjs",
+          format: "javascript/tokens-stylelint",
         },
       ],
     },
