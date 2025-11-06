@@ -6,6 +6,9 @@ This rule checks that CSS declarations use font-size design token variables
 instead of hardcoded values. This ensures consistent font-size usage across
 the application and makes it easier to maintain design system consistency.
 
+This rule is fixable and can automatically replace hardcoded font-size values
+with the appropriate design tokens when run with the --fix flag.
+
 Examples of incorrect code for this rule:
 -----------------------------------------
 
@@ -198,3 +201,23 @@ The rule also allows these non-token values:
   .unset-text {
     font-size: unset;
   }
+
+Automatic fixes
+---------------
+
+This rule can automatically fix violations by replacing hardcoded values with
+the appropriate design tokens:
+
+.. code-block:: css
+
+  /* Before */
+  .text { font-size: 15px; }
+  .small-text { font-size: 0.867rem; }
+  .large-text { font-size: 1.133rem; }
+
+.. code-block:: css
+
+  /* After (with --fix) */
+  .text { font-size: var(--font-size-root); }
+  .small-text { font-size: var(--font-size-small); }
+  .large-text { font-size: var(--font-size-large); }

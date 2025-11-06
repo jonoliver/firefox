@@ -183,3 +183,85 @@ testRule({
     },
   ],
 });
+
+// autofix tests
+testRule({
+  plugins: [plugin],
+  ruleName,
+  config: true,
+  fix: true,
+  reject: [
+    {
+      code: ".a { font-size: 15px; }",
+      fixed: ".a { font-size: var(--font-size-root); }",
+      message: messages.rejected("15px"),
+      description: "15px should be fixed to use --font-size-root token.",
+    },
+    {
+      code: ".a { font-size: 11px; }",
+      fixed: ".a { font-size: var(--font-size-xsmall); }",
+      message: messages.rejected("11px"),
+      description: "11px should be fixed to use --font-size-xsmall token.",
+    },
+    {
+      code: ".a { font-size: 13px; }",
+      fixed: ".a { font-size: var(--font-size-small); }",
+      message: messages.rejected("13px"),
+      description: "13px should be fixed to use --font-size-small token.",
+    },
+    {
+      code: ".a { font-size: 17px; }",
+      fixed: ".a { font-size: var(--font-size-large); }",
+      message: messages.rejected("17px"),
+      description: "17px should be fixed to use --font-size-large token.",
+    },
+    {
+      code: ".a { font-size: 22px; }",
+      fixed: ".a { font-size: var(--font-size-xlarge); }",
+      message: messages.rejected("22px"),
+      description: "22px should be fixed to use --font-size-xlarge token.",
+    },
+    {
+      code: ".a { font-size: 24px; }",
+      fixed: ".a { font-size: var(--font-size-xxlarge); }",
+      message: messages.rejected("24px"),
+      description: "24px should be fixed to use --font-size-xxlarge token.",
+    },
+    {
+      code: ".a { font-size: 33px; }",
+      fixed: ".a { font-size: var(--font-size-xxxlarge); }",
+      message: messages.rejected("33px"),
+      description: "33px should be fixed to use --font-size-xxxlarge token.",
+    },
+    {
+      code: ".a { font-size: 0.733rem; }",
+      fixed: ".a { font-size: var(--font-size-xsmall); }",
+      message: messages.rejected("0.733rem"),
+      description: "0.733rem should be fixed to use --font-size-xsmall token.",
+    },
+    {
+      code: ".a { font-size: 0.867rem; }",
+      fixed: ".a { font-size: var(--font-size-small); }",
+      message: messages.rejected("0.867rem"),
+      description: "0.867rem should be fixed to use --font-size-small token.",
+    },
+    {
+      code: ".a { font-size: 1.133rem; }",
+      fixed: ".a { font-size: var(--font-size-large); }",
+      message: messages.rejected("1.133rem"),
+      description: "1.133rem should be fixed to use --font-size-large token.",
+    },
+    {
+      code: ".a { font-size: 1.467rem; }",
+      fixed: ".a { font-size: var(--font-size-xlarge); }",
+      message: messages.rejected("1.467rem"),
+      description: "1.467rem should be fixed to use --font-size-xlarge token.",
+    },
+    {
+      code: ".a { font-size: 1.6rem; }",
+      fixed: ".a { font-size: var(--font-size-xxlarge); }",
+      message: messages.rejected("1.6rem"),
+      description: "1.6rem should be fixed to use --font-size-xxlarge token.",
+    },
+  ],
+});
