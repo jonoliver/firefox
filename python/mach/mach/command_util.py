@@ -67,6 +67,7 @@ MACH_COMMANDS = {
     "build": MachCommandReference(
         "python/mozbuild/mozbuild/build_commands.py",
     ),
+    "changelog": MachCommandReference("tools/changelog/mach_commands.py"),
     "build-backend": MachCommandReference(
         "python/mozbuild/mozbuild/build_commands.py",
     ),
